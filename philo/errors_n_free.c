@@ -1,5 +1,19 @@
 #include "philo.h"
 
+int	detach_threads(char *msg, int end, int start, t_args *args)
+{
+	//rectify cause mutexes not freed when the pthread_create fails
+	while (start < end)
+	{
+		if (pthread_detach(args->philos[i] != 0))
+			return (putstr_err("Problem unlocking a mutex"));
+		if (pthread_mutex_destroy(&args->forks[i]) != 0)
+			return (putstr_err("Problem destroying a fork (mutex)"));
+		++start;
+	}
+	return (putstr_err(msg));
+}
+
 int	putstr_err(char *msg)
 {
 	write(2, msg, ft_strlen(msg));

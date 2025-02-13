@@ -19,6 +19,7 @@ typedef struct s_args
 	pthread_mutex_t	*forks;
 }	t_args;
 
+int				detach_threads(char *msg, int end, int start, t_args *args);
 void			routine(t_args *args);
 int				error_miss_args(void);
 int				parsing(t_args *args, char **argv, int argc);
