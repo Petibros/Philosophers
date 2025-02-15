@@ -1,14 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   errors_n_free.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/14 20:31:45 by sacgarci          #+#    #+#             */
+/*   Updated: 2025/02/15 21:12:19 by sacgarci         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	detach_threads(char *msg, int end, int start, t_args *args)
 {
-	//rectify cause mutexes not freed when the pthread_create fails
+	unsigned int	i;
+
+	i = 0;
+	while (i < args->n_philo)
+	{
+		if (pthread_mutex_destroy(&args->forks[start]) != 0)
+			return (putstr_err("Problem destroying a fork (mutex)\n"));
+		++i;
+	}
 	while (start < end)
 	{
-		if (pthread_detach(args->philos[i] != 0))
-			return (putstr_err("Problem unlocking a mutex"));
-		if (pthread_mutex_destroy(&args->forks[i]) != 0)
-			return (putstr_err("Problem destroying a fork (mutex)"));
+		if (pthread_detach(args->philosophers[start] != 0))
+			return (putstr_err("Problem detaching a thread\n"));
 		++start;
 	}
 	return (putstr_err(msg));

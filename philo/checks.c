@@ -1,32 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   checks.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/14 20:31:41 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/14 21:08:51 by sacgarci         ###   ########.fr       */
+/*   Created: 2025/02/15 15:26:33 by sacgarci          #+#    #+#             */
+/*   Updated: 2025/02/15 21:10:07 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	main(int argc, char **argv)
+int	check_death(t_args *args)
 {
-	t_args	*args;
+	int	i;
 
-	if (argc != 5 && argc != 6)
-		return (error_miss_args());
-	args = malloc(sizeof(t_args));
-	if (!args)
+	i = 0;
+	while (i < args->n_philo)
 	{
-		write(2, "Failed to alloc args\n", 21);
-		return (1);
+		if (calc_time(args->philos[i].last_ate, &args->philos[i].time) >= args->time_to_die)
+			return (0);
+		++i;
 	}
-	if (parsing(args, argv, argc) == -1)
-		return (ft_free(args, &invalid_format, 1));
-	if (philosophers(args) == -1)
-		return (ft_free(args, NULL, 1));
-	return (ft_free(args, NULL, 0));
+	return (-1);
+}
+
+int	check_n_eat(t_args *args)
+{
+	int	i;
+
+	i = 0;
+	while (i < args->n_philo && args->philos[i].times_eaten >= args->n_eat)
+		++i;
+	if (i == args->n_philo)
+		return (0);
+	return (-1);
 }

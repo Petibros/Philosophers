@@ -1,4 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/14 20:31:26 by sacgarci          #+#    #+#             */
+/*   Updated: 2025/02/15 15:26:18 by sacgarci         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
+
+long	calc_time(struct timeval start, struct timeval *time)
+{
+	gettimeofday(time, NULL);
+	return ((time->tv_sec - start.tv_sec) * 1000
+		+ (time->tv_usec - start.tv_usec) / 1000);
+}
 
 int	ft_strcmp(char *s1, char *s2)
 {
