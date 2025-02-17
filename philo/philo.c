@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 20:31:09 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/17 01:38:37 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/17 19:20:33 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,13 @@ static void	init_philo(t_args *args, unsigned int i)
 	gettimeofday(&args->philos[i].time_start, NULL);
 	args->philos[i].last_ate.tv_sec = args->philos[i].time_start.tv_sec;
 	args->philos[i].last_ate.tv_usec = args->philos[i].time_start.tv_usec;
+	pthread_mutex_init(&args->philos[i].time_mutex, NULL);
 }
 
 static void	table_gestion(t_args *args)
 {
-	unsigned int	i;
 	long			n;
 
-	i = 0;
 	while (true)
 	{
 		usleep(1000);
@@ -60,6 +59,7 @@ static int	destroy_table(t_args *args)
 	while (i < args->n_philo)
 	{
 		pthread_mutex_destroy(&args->forks[i]);
+		pthread_mutex_destroy(&args->philos[i].time_mutex);
 		++i;
 	}
 	pthread_mutex_destroy(&args->write);

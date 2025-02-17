@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/17 18:51:09 by sacgarci          #+#    #+#             */
+/*   Updated: 2025/02/17 19:22:10 by sacgarci         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -18,6 +30,7 @@ typedef struct s_philo
 	struct timeval	last_ate;
 	struct timeval	time_start;
 	struct timeval	time;
+	pthread_mutex_t	time_mutex;
 	pthread_mutex_t	*write;
 	pthread_mutex_t	forks[2];
 }	t_philo;
@@ -40,7 +53,8 @@ void			invalid_format(void);
 unsigned int	ft_atoui(char *nbr);
 int				check_death(t_args *args);
 int				check_n_eat(t_args *args);
-long			calc_time(struct timeval start, struct timeval *time);
+long			calc_time(struct timeval start, struct timeval *time,
+					pthread_mutex_t *mutex_time);
 int				detach_threads(char *msg, int end, int start, t_args *args);
 int				error_miss_args(void);
 int				parsing(t_args *args, char **argv, int argc);

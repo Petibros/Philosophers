@@ -6,15 +6,18 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 20:31:26 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/15 15:26:18 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/17 19:22:43 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long	calc_time(struct timeval start, struct timeval *time)
+long	calc_time(struct timeval start, struct timeval *time,
+		pthread_mutex_t *mutex_time)
 {
+	pthread_mutex_lock(mutex_time);
 	gettimeofday(time, NULL);
+	pthread_mutex_unlock(mutex_time);
 	return ((time->tv_sec - start.tv_sec) * 1000
 		+ (time->tv_usec - start.tv_usec) / 1000);
 }
