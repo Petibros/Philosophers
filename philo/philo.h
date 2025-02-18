@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:51:09 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/17 19:22:10 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/17 23:45:13 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ typedef struct s_philo
 	struct timeval	time_start;
 	struct timeval	time;
 	pthread_mutex_t	time_mutex;
+	pthread_mutex_t	last_ate_mutex;
 	pthread_mutex_t	*write;
-	pthread_mutex_t	forks[2];
+	pthread_mutex_t	*forks[2];
 }	t_philo;
 
 typedef struct s_args

@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 20:31:09 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/17 19:20:33 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/18 02:37:13 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,20 @@
 
 static void	init_philo(t_args *args, unsigned int i)
 {
+	int	fork_order;
+
 	args->philos[i].philo_id = i + 1;
 	args->philos[i].time_to_eat = args->time_to_eat;
 	args->philos[i].time_to_sleep = args->time_to_sleep;
-	args->philos[i].forks[0] = args->forks[i];
-	args->philos[i].forks[1] = args->forks[0];
+	fork_order = i % 2;
+	args->philos[i].forks[fork_order] = &args->forks[i];
+	if (fork_order == 0)
+		fork_order = 1;
+	else
+		fork_order = 0;
+	args->philos[i].forks[fork_order] = &args->forks[0];
+	if (i < args->n_philo - 1)
+		args->philos[i].forks[fork_order] = &args->forks[i + 1];
 	args->philos[i].times_eaten = 0;
 	args->philos[i].stop = &args->stop;
 	args->philos[i].write = &args->write;
@@ -26,6 +35,7 @@ static void	init_philo(t_args *args, unsigned int i)
 	args->philos[i].last_ate.tv_sec = args->philos[i].time_start.tv_sec;
 	args->philos[i].last_ate.tv_usec = args->philos[i].time_start.tv_usec;
 	pthread_mutex_init(&args->philos[i].time_mutex, NULL);
+	pthread_mutex_init(&args->philos[i].last_ate_mutex, NULL);
 }
 
 static void	table_gestion(t_args *args)
@@ -34,7 +44,7 @@ static void	table_gestion(t_args *args)
 
 	while (true)
 	{
-		usleep(1000);
+		usleep(5000);
 		n = check_death(args);
 		if (n != -1)
 			return ;
@@ -52,16 +62,16 @@ static int	destroy_table(t_args *args)
 	i = 0;
 	while (i < args->n_philo)
 	{
-		pthread_join(args->philosophers[i], NULL);
-		++i;
-	}
-	i = 0;
-	while (i < args->n_philo)
-	{
 		pthread_mutex_destroy(&args->forks[i]);
 		pthread_mutex_destroy(&args->philos[i].time_mutex);
 		++i;
 	}
+	while (i < args->n_philo)
+	{
+		pthread_join(args->philosophers[i], NULL);
+		++i;
+	}
+	i = 0;
 	pthread_mutex_destroy(&args->write);
 	return (0);
 }
@@ -82,8 +92,6 @@ static int	init_table(t_args *args)
 	while (i < args->n_philo)
 	{
 		init_philo(args, i);
-		if (i < args->n_philo - 1)
-			args->philos[i].forks[1] = args->forks[i + 1];
 		pthread_create(&args->philosophers[i], NULL,
 			&routine, &args->philos[i]);
 		++i;
