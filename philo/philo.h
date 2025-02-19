@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:51:09 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/17 23:45:13 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/18 23:53:35 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ typedef struct s_philo
 	struct timeval	time;
 	pthread_mutex_t	time_mutex;
 	pthread_mutex_t	last_ate_mutex;
+	pthread_mutex_t	*times_eaten_mutex;
 	pthread_mutex_t	*write;
+	pthread_mutex_t	*is_running;
 	pthread_mutex_t	*forks[2];
 }	t_philo;
 
@@ -48,8 +50,11 @@ typedef struct s_args
 	pthread_t		*philosophers;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	write;
+	pthread_mutex_t	times_eaten_mutex;
+	pthread_mutex_t	is_running;
 }	t_args;
 
+bool			is_running(pthread_mutex_t *is_running, bool *stop);
 void			invalid_format(void);
 unsigned int	ft_atoui(char *nbr);
 int				check_death(t_args *args);

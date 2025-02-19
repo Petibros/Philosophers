@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/14 20:31:37 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/14 20:31:49 by sacgarci         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "philo.h"
 
 static int	check_argv(char **av, int ac)
@@ -43,7 +31,6 @@ static int	check_argv(char **av, int ac)
 int	parsing(t_args *args, char **argv, int argc)
 {
 	int				i;
-	unsigned int	*n;
 
 	i = 1;
 	if (check_argv(argv, argc) == -1)
@@ -53,16 +40,15 @@ int	parsing(t_args *args, char **argv, int argc)
 	while (i < argc)
 	{
 		if (i == 1)
-			n = &args->n_philo;
+			args->n_philo = ft_atoui(argv[i]);
 		else if (i == 2)
-			n = &args->time_to_die;
+			args->time_to_die = ft_atoui(argv[i]);
 		else if (i == 3)
-			n = &args->time_to_eat;
+			args->time_to_eat = ft_atoui(argv[i]);
 		else if (i == 4)
-			n = &args->time_to_sleep;
+			args->time_to_sleep = ft_atoui(argv[i]);
 		else if (i == 5)
-			n = (unsigned int *)&args->n_eat;
-		*n = ft_atoui(argv[i]);
+			args->n_eat = ft_atoui(argv[i]);
 		++i;
 	}
 	return (1);

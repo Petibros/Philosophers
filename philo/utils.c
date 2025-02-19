@@ -6,11 +6,21 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 20:31:26 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/17 19:22:43 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/18 22:27:35 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+bool	is_running(pthread_mutex_t *is_running, bool *stop)
+{
+	bool	state;
+
+	pthread_mutex_lock(is_running);
+	state = *stop;
+	pthread_mutex_unlock(is_running);
+	return (state);
+}
 
 long	calc_time(struct timeval start, struct timeval *time,
 		pthread_mutex_t *mutex_time)

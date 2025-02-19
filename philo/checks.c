@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 15:26:33 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/18 01:00:29 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/19 02:16:49 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@ int	check_death(t_args *args)
 		pthread_mutex_unlock(&args->philos[i].last_ate_mutex);
 		if (time >= args->time_to_die)
 		{
+			pthread_mutex_lock(&args->is_running);
 			args->stop = true;
+			pthread_mutex_unlock(&args->is_running);
 			time = calc_time(args->philos[i].time_start,
 					&args->philos[i].time, &args->philos[i].time_mutex);
 			pthread_mutex_lock(&args->write);
@@ -44,15 +46,23 @@ int	check_n_eat(t_args *args)
 	unsigned int	i;
 
 	i = 0;
+	pthread_mutex_lock(&args->times_eaten_mutex);
 	while (i < args->n_philo && args->philos[i].times_eaten >= args->n_eat)
+	{
+		pthread_mutex_unlock(&args->times_eaten_mutex);
 		++i;
+		pthread_mutex_lock(&args->times_eaten_mutex);
+	}
+	pthread_mutex_unlock(&args->times_eaten_mutex);
 	if (i == args->n_philo)
 	{
+		pthread_mutex_lock(&args->is_running);
 		args->stop = true;
+		pthread_mutex_unlock(&args->is_running);
 		pthread_mutex_lock(&args->write);
 		printf("%ld ms : all the philosophers have eaten enough\n", calc_time
-			(args->philos[i - 1].time_start,
-				&args->philos[i - 1].time, &args->philos[i].time_mutex));
+			(args->philos[0].time_start,
+				&args->philos[0].time, &args->philos[0].time_mutex));
 		pthread_mutex_unlock(&args->write);
 		return (i - 1);
 	}
