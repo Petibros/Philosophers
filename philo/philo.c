@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 20:31:09 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/18 23:55:40 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/20 02:12:42 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ static int	destroy_table(t_args *args)
 	{
 		pthread_mutex_destroy(&args->forks[i]);
 		pthread_mutex_destroy(&args->philos[i].time_mutex);
+		pthread_mutex_destroy(&args->philos[i].last_ate_mutex);
 		++i;
 	}
 	pthread_mutex_destroy(&args->write);
@@ -98,8 +99,9 @@ static int	init_table(t_args *args)
 	while (i < args->n_philo)
 	{
 		init_philo(args, i);
-		pthread_create(&args->philosophers[i], NULL,
-			&routine, &args->philos[i]);
+		if (pthread_create(&args->philosophers[i], NULL,
+				&routine, &args->philos[i]) != 0)
+			return (detach_threads("Failed to create a thread\n", i, 0, args));
 		++i;
 	}
 	return (0);

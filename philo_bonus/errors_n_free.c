@@ -6,43 +6,11 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 20:31:45 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/20 02:10:29 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/19 22:10:34 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	detach_threads(char *msg, int end, int start, t_args *args)
-{
-	unsigned int	i;
-
-	i = 0;
-	while (i < args->n_philo)
-	{
-		pthread_mutex_destroy(&args->forks[start]);
-		++i;
-	}
-	while (start < end)
-	{
-		pthread_detach(args->philosophers[start]);
-		pthread_mutex_destroy(&args->philos[i].last_ate_mutex);
-		pthread_mutex_destroy(&args->philos[i].time_mutex);
-		++start;
-	}
-	pthread_mutex_destroy(&args->write);
-	pthread_mutex_destroy(&args->is_running);
-	pthread_mutex_destroy(&args->times_eaten_mutex);
-	free(args->philosophers);
-	free(args->philos);
-	free(args->forks);
-	return (putstr_err(msg));
-}
-
-int	putstr_err(char *msg)
-{
-	write(2, msg, ft_strlen(msg));
-	return (-1);
-}
 
 int	error_miss_args(void)
 {
