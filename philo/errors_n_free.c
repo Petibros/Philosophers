@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 20:31:45 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/20 02:10:29 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/22 23:01:50 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ int	detach_threads(char *msg, int end, int start, t_args *args)
 	{
 		pthread_detach(args->philosophers[start]);
 		pthread_mutex_destroy(&args->philos[i].last_ate_mutex);
-		pthread_mutex_destroy(&args->philos[i].time_mutex);
 		++start;
 	}
+	pthread_mutex_destroy(&args->time_mutex);
 	pthread_mutex_destroy(&args->write);
 	pthread_mutex_destroy(&args->is_running);
 	pthread_mutex_destroy(&args->times_eaten_mutex);

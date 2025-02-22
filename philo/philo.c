@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 20:31:09 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/20 02:12:42 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/22 23:06:55 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,11 @@ static void	init_philo(t_args *args, unsigned int i)
 	args->philos[i].write = &args->write;
 	args->philos[i].times_eaten_mutex = &args->times_eaten_mutex;
 	args->philos[i].is_running = &args->is_running;
-	gettimeofday(&args->philos[i].time_start, NULL);
-	args->philos[i].last_ate.tv_sec = args->philos[i].time_start.tv_sec;
-	args->philos[i].last_ate.tv_usec = args->philos[i].time_start.tv_usec;
-	pthread_mutex_init(&args->philos[i].time_mutex, NULL);
+	args->philos[i].time_start = &args->time_start;
+	args->philos[i].last_ate.tv_sec = args->time_start.tv_sec;
+	args->philos[i].last_ate.tv_usec = args->time_start.tv_usec;
+	args->philos[i].time_mutex = &args->time_mutex;
+	args->philos[i].time = &args->time;
 	pthread_mutex_init(&args->philos[i].last_ate_mutex, NULL);
 }
 
@@ -71,10 +72,10 @@ static int	destroy_table(t_args *args)
 	while (i < args->n_philo)
 	{
 		pthread_mutex_destroy(&args->forks[i]);
-		pthread_mutex_destroy(&args->philos[i].time_mutex);
 		pthread_mutex_destroy(&args->philos[i].last_ate_mutex);
 		++i;
 	}
+	pthread_mutex_destroy(&args->time_mutex);
 	pthread_mutex_destroy(&args->write);
 	pthread_mutex_destroy(&args->is_running);
 	pthread_mutex_destroy(&args->times_eaten_mutex);
@@ -87,9 +88,11 @@ static int	init_table(t_args *args)
 
 	i = 0;
 	args->stop = false;
+	pthread_mutex_init(&args->time_mutex, NULL);
 	pthread_mutex_init(&args->write, NULL);
 	pthread_mutex_init(&args->is_running, NULL);
 	pthread_mutex_init(&args->times_eaten_mutex, NULL);
+	gettimeofday(&args->time_start, NULL);
 	while (i < args->n_philo)
 	{
 		pthread_mutex_init(&args->forks[i], NULL);

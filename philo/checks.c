@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 15:26:33 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/19 02:16:49 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/22 23:01:09 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,15 @@ int	check_death(t_args *args)
 	{
 		pthread_mutex_lock(&args->philos[i].last_ate_mutex);
 		time = calc_time(args->philos[i].last_ate,
-				&args->philos[i].time, &args->philos[i].time_mutex);
+				args->philos[i].time, args->philos[i].time_mutex);
 		pthread_mutex_unlock(&args->philos[i].last_ate_mutex);
 		if (time >= args->time_to_die)
 		{
 			pthread_mutex_lock(&args->is_running);
 			args->stop = true;
 			pthread_mutex_unlock(&args->is_running);
-			time = calc_time(args->philos[i].time_start,
-					&args->philos[i].time, &args->philos[i].time_mutex);
+			time = calc_time(*args->philos[i].time_start,
+					args->philos[i].time, args->philos[i].time_mutex);
 			pthread_mutex_lock(&args->write);
 			printf("%ld ms : philo n°%u died\n", time, i + 1);
 			pthread_mutex_unlock(&args->write);
@@ -61,8 +61,8 @@ int	check_n_eat(t_args *args)
 		pthread_mutex_unlock(&args->is_running);
 		pthread_mutex_lock(&args->write);
 		printf("%ld ms : all the philosophers have eaten enough\n", calc_time
-			(args->philos[0].time_start,
-				&args->philos[0].time, &args->philos[0].time_mutex));
+			(args->time_start,
+				&args->time, &args->time_mutex));
 		pthread_mutex_unlock(&args->write);
 		return (i - 1);
 	}
