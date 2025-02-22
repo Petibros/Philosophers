@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 20:31:41 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/19 22:11:54 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/20 21:54:54 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,7 @@ int	main(int argc, char **argv)
 	}
 	if (parsing(args, argv, argc) == -1)
 		return (ft_free(args, &invalid_format, 1));
+	if (philosophers(args) == -1)
+		return (ft_free(args, NULL, 1));
 	return (ft_free(args, NULL, 0));
 }
