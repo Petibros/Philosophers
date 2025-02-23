@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 22:17:07 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/21 03:41:00 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/23 05:39:59 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	fork_routine(t_args *args)
 {
 	sem_wait(args->write);
-	printf("%ld ms : args n°%u has taken a fork\n",
+	printf("%ld ms : philo n°%u has taken a fork\n",
 		calc_time(args->time_start, &args->time, args->time_sem),
 		args->philo_id);
 	sem_post(args->write);
@@ -31,12 +31,12 @@ static int	fork_routine(t_args *args)
 static void	eat_routine(t_args *args)
 {
 	sem_wait(args->write);
-	printf("%ld ms : args n°%u has taken a fork\n",
+	printf("%ld ms : philo n°%u has taken a fork\n",
 		calc_time(args->time_start, &args->time, args->time_sem),
 		args->philo_id);
 	sem_post(args->write);
 	sem_wait(args->write);
-	printf("%ld ms : args n°%u is eating\n", calc_time(args->time_start,
+	printf("%ld ms : philo n°%u is eating\n", calc_time(args->time_start,
 			&args->time, args->time_sem), args->philo_id);
 	sem_post(args->write);
 	sem_wait(args->last_ate_sem);
@@ -51,7 +51,7 @@ static void	eat_routine(t_args *args)
 static void	sleep_routine(t_args *args)
 {
 	sem_wait(args->write);
-	printf("%ld ms : args n°%u is sleeping\n", calc_time(args->time_start,
+	printf("%ld ms : philo n°%u is sleeping\n", calc_time(args->time_start,
 			&args->time, args->time_sem), args->philo_id);
 	sem_post(args->write);
 	usleep(args->time_to_sleep * 1000);

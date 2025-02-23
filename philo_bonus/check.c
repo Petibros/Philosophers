@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 22:16:58 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/21 03:53:45 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/22 23:20:42 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ static int	check_death(t_args *args)
 		if (time >= args->time_to_die)
 		{
 			sem_post(args->stop_sim);
-			sem_post(args->process_running);
 			time = calc_time(args->time_start,
 					&args->time, args->time_sem);
 			sem_wait(args->write);
@@ -75,8 +74,10 @@ void	*check(void *ptr)
 	t_args	*args;
 
 	args = ptr;
-	while (true)
+	sem_wait(args->stop_sem);
+	while (args->stop == false)
 	{
+		sem_post(args->stop_sem);
 		if (args->n_eat != -1)
 		{
 			if (check_eat(args) == -1)
@@ -85,5 +86,8 @@ void	*check(void *ptr)
 		if (check_death(args) == -1)
 			return (NULL);
 		usleep(5000);
+		sem_wait(args->stop_sem);
 	}
+	sem_post(args->stop_sem);
+	return (NULL);
 }

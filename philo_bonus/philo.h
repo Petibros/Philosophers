@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:51:09 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/21 04:08:53 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/23 04:19:43 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ typedef struct s_args
 	sem_t			*forks;
 }	t_args;
 
+int				init_sems_n_verif(t_args *args);
+void			destroy_n_join(t_args *args);
 void			*lock_sim(void *ptr);
 void			*check(void *ptr);
 long			calc_time(struct timeval start, struct timeval *time,
