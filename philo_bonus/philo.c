@@ -6,16 +6,18 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 20:38:08 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/24 02:21:30 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/24 05:10:31 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	create_philos(t_args *args, unsigned int n, int status)
+static int	create_philos(t_args *args, int status)
 {
-	int	pid;
+	int				pid;
+	unsigned int	n;
 
+	n = 0;
 	while (n < args->n_philo)
 	{
 		pid = fork();
@@ -33,6 +35,7 @@ int	create_philos(t_args *args, unsigned int n, int status)
 			}
 			return (status);
 		}
+		usleep(800);
 		++n;
 	}
 	return (status);
@@ -81,15 +84,14 @@ int	philosophers(t_args *args)
 	unsigned int	n;
 	int				status;
 
-	n = 0;
 	status = 0;
 	init_table(args);
 	sem_wait(args->stop_sim);
-	if (create_philos(args, n, status) == -1)
-		status = -1;
+	status = create_philos(args, status);
 	wait_process(args);
 	post_process(args);
-	while (n < args->n_philo)
+	n = 0;
+	while (status == 0 && n < args->n_philo)
 	{
 		waitpid(-1, NULL, 0);
 		++n;

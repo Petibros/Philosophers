@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 22:16:58 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/23 21:40:43 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/24 05:27:13 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,9 @@ void	*lock_sim(void *ptr)
 	args = ptr;
 	sem_wait(args->stop_sim);
 	sem_post(args->stop_sim);
+	sem_wait(args->stop_sem);
 	args->stop = true;
+	sem_post(args->stop_sem);
 	return (NULL);
 }
 
@@ -56,9 +58,11 @@ static int	check_death(t_args *args)
 		sem_post(args->last_ate_sem);
 		if (time >= args->time_to_die)
 		{
+			sem_wait(args->stop_sem);
+			args->stop = true;
+			sem_post(args->stop_sem);
 			sem_post(args->stop_sim);
-			time = calc_time(args->time_start,
-					&args->time, args->time_sem);
+			time = calc_time(args->time_start, &args->time, args->time_sem);
 			sem_wait(args->write);
 			printf("%ld ms : philo n°%u died\n", time, i + 1);
 			sem_post(args->write);
@@ -79,10 +83,10 @@ void	*check(void *ptr)
 		sem_post(args->stop_sem);
 		if (args->n_eat != -1)
 		{
-			if (check_eat(args) == -1)
+			if (check_eat(args) != -1)
 				return (NULL);
 		}
-		if (check_death(args) == -1)
+		if (check_death(args) != -1)
 			return (NULL);
 		usleep(5000);
 	}
