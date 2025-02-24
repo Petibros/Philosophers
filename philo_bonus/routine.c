@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 22:17:07 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/23 05:39:59 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/24 02:34:00 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,15 @@ int	routine(t_args *args)
 			break ;
 		}
 		if (fork_routine(args) == -1)
+		{
+			sem_post(args->stop_sim);
 			break ;
+		}
 		if (is_running(args->stop_sem, &args->stop) == true)
 			eat_routine(args);
 		sem_post(args->forks);
 		sem_post(args->forks);
+		printf("p\n");
 		if (is_running(args->stop_sem, &args->stop) == true)
 			sleep_routine(args);
 		if (is_running(args->stop_sem, &args->stop) == true)

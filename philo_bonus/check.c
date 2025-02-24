@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 22:16:58 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/22 23:20:42 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/23 21:40:43 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,7 @@ void	*check(void *ptr)
 	t_args	*args;
 
 	args = ptr;
-	sem_wait(args->stop_sem);
-	while (args->stop == false)
+	while (is_running(args->stop_sem, &args->stop) == true)
 	{
 		sem_post(args->stop_sem);
 		if (args->n_eat != -1)
@@ -86,8 +85,6 @@ void	*check(void *ptr)
 		if (check_death(args) == -1)
 			return (NULL);
 		usleep(5000);
-		sem_wait(args->stop_sem);
 	}
-	sem_post(args->stop_sem);
 	return (NULL);
 }

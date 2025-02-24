@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:51:09 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/23 04:19:43 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/23 21:57:19 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_args
 	pthread_t		verif;
 	pthread_t		lock_to_stop;
 	sem_t			*stop_sim;
+	sem_t			*process_running;
 	sem_t			*time_sem;
 	sem_t			*last_ate_sem;
 	sem_t			*stop_sem;
@@ -48,6 +49,8 @@ typedef struct s_args
 	sem_t			*forks;
 }	t_args;
 
+void			wait_process(t_args *args);
+void			post_process(t_args *args);
 int				init_sems_n_verif(t_args *args);
 void			destroy_n_join(t_args *args);
 void			*lock_sim(void *ptr);

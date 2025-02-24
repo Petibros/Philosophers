@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 04:14:18 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/23 05:39:56 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/24 01:46:19 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,28 @@ void	destroy_n_join(t_args *args)
 	sem_close(args->stop_sem);
 	pthread_join(args->verif, NULL);
 	pthread_join(args->lock_to_stop, NULL);
+}
+
+void	wait_process(t_args *args)
+{
+	unsigned int	n;
+
+	n = 0;
+	while (n < args->n_philo)
+	{
+		sem_wait(args->process_running);
+		++n;
+	}
+}
+
+void	post_process(t_args *args)
+{
+	unsigned int	n;
+
+	n = 0;
+	while (n < args->n_philo)
+	{
+		sem_post(args->process_running);
+		++n;
+	}
 }
