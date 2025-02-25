@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 20:38:08 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/25 08:11:50 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/25 08:20:32 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,11 @@ static int	create_philos(t_args *args, int status)
 			{
 				status = routine(args);
 				destroy_n_join(args);
-				exit(0);
 				return (1);
 			}
 			return (status);
 		}
-		usleep(500);
+		usleep(5000);
 		++n;
 	}
 	return (status);
@@ -115,15 +114,15 @@ static int	init_table(t_args *args)
 		++n;
 	}
 	sem_wait(args->stop_sim);
+	gettimeofday(&args->time, NULL);
+	gettimeofday(&args->last_ate, NULL);
+	gettimeofday(&args->time_start, NULL);
+	args->times_eaten = 0;
 	if (pthread_create(&args->lock_main, NULL, &lock_main, args))
 		return (-1);
 	if (pthread_create(&args->check_eaten_enough,
 			NULL, &check_eaten_enough, args))
 		return (-1);
-	gettimeofday(&args->time, NULL);
-	gettimeofday(&args->last_ate, NULL);
-	gettimeofday(&args->time_start, NULL);
-	args->times_eaten = 0;
 	return (0);
 }
 
