@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 20:31:09 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/23 05:40:39 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/24 21:50:55 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	init_philo(t_args *args, unsigned int i)
 	args->philos[i].times_eaten = 0;
 	args->philos[i].stop = &args->stop;
 	args->philos[i].write = &args->write;
-	args->philos[i].times_eaten_mutex = &args->times_eaten_mutex;
+	pthread_mutex_init(&args->philos[i].times_eaten_mutex, NULL);
 	args->philos[i].is_running = &args->is_running;
 	args->philos[i].time_start = &args->time_start;
 	args->philos[i].last_ate.tv_sec = args->time_start.tv_sec;
@@ -73,12 +73,12 @@ static int	destroy_table(t_args *args)
 	{
 		pthread_mutex_destroy(&args->forks[i]);
 		pthread_mutex_destroy(&args->philos[i].last_ate_mutex);
+		pthread_mutex_destroy(&args->philos[i].times_eaten_mutex);
 		++i;
 	}
 	pthread_mutex_destroy(&args->time_mutex);
 	pthread_mutex_destroy(&args->write);
 	pthread_mutex_destroy(&args->is_running);
-	pthread_mutex_destroy(&args->times_eaten_mutex);
 	return (0);
 }
 
@@ -91,7 +91,6 @@ static int	init_table(t_args *args)
 	pthread_mutex_init(&args->time_mutex, NULL);
 	pthread_mutex_init(&args->write, NULL);
 	pthread_mutex_init(&args->is_running, NULL);
-	pthread_mutex_init(&args->times_eaten_mutex, NULL);
 	gettimeofday(&args->time_start, NULL);
 	while (i < args->n_philo)
 	{

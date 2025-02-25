@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 15:26:33 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/22 23:01:09 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/24 21:51:35 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ int	check_n_eat(t_args *args)
 	unsigned int	i;
 
 	i = 0;
-	pthread_mutex_lock(&args->times_eaten_mutex);
+	pthread_mutex_lock(&args->philos[i].times_eaten_mutex);
 	while (i < args->n_philo && args->philos[i].times_eaten >= args->n_eat)
 	{
-		pthread_mutex_unlock(&args->times_eaten_mutex);
+		pthread_mutex_unlock(&args->philos[i].times_eaten_mutex);
 		++i;
-		pthread_mutex_lock(&args->times_eaten_mutex);
+		pthread_mutex_lock(&args->philos[i].times_eaten_mutex);
 	}
-	pthread_mutex_unlock(&args->times_eaten_mutex);
+	pthread_mutex_unlock(&args->philos[i].times_eaten_mutex);
 	if (i == args->n_philo)
 	{
 		pthread_mutex_lock(&args->is_running);

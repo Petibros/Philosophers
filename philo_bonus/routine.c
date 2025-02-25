@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 22:17:07 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/24 03:14:44 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/25 07:14:03 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,16 @@ static void	eat_routine(t_args *args)
 	printf("%ld ms : philo n°%u has taken a fork\n",
 		calc_time(args->time_start, &args->time, args->time_sem),
 		args->philo_id);
-	sem_post(args->write);
-	sem_wait(args->write);
 	printf("%ld ms : philo n°%u is eating\n", calc_time(args->time_start,
 			&args->time, args->time_sem), args->philo_id);
 	sem_post(args->write);
 	sem_wait(args->last_ate_sem);
 	gettimeofday(&args->last_ate, NULL);
 	sem_post(args->last_ate_sem);
-	usleep(args->time_to_eat * 1000);
 	sem_wait(args->times_eaten_sem);
 	++args->times_eaten;
 	sem_post(args->times_eaten_sem);
+	usleep(args->time_to_eat * 1000);
 }
 
 static void	sleep_routine(t_args *args)
