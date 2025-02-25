@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 20:38:08 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/25 08:20:32 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/25 08:24:28 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,6 @@ static int	create_philos(t_args *args, int status)
 
 void	destroy_table(t_args *args)
 {
-	pthread_join(args->check_eaten_enough, NULL);
-	pthread_join(args->lock_main, NULL);
 	sem_close(args->forks);
 	sem_close(args->write);
 	sem_close(args->stop_sim);
@@ -133,8 +131,13 @@ int	philosophers(t_args *args)
 	status = 0;
 	init_table(args);
 	status = create_philos(args, status);
-	while (status == 0 && waitpid(-1, NULL, 0) > 0)
-		continue ;
+	if (status == 0)
+	{
+		while (waitpid(-1, NULL, 0) > 0)
+			continue ;
+		pthread_join(args->check_eaten_enough, NULL);
+		pthread_join(args->lock_main, NULL);
+	}
 	destroy_table(args);
 	return (status);
 }
