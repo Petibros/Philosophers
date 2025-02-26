@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:51:09 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/25 02:50:16 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/26 07:56:01 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef struct s_args
 void			*lock_main(void *ptr);
 void			*check_eaten_enough(void *ptr);
 int				init_sems_n_verif(t_args *args);
-void			destroy_n_join(t_args *args);
+void			destroy_n_join(t_args *args, bool join);
 void			*lock_sim(void *ptr);
 void			*check(void *ptr);
 long			calc_time(struct timeval start, struct timeval *time,
