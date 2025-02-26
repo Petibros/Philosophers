@@ -6,7 +6,7 @@
 #    By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/26 08:09:02 by sacgarci          #+#    #+#              #
-#    Updated: 2025/02/26 08:13:40 by sacgarci         ###   ########.fr        #
+#    Updated: 2025/02/26 08:16:32 by sacgarci         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,10 +23,10 @@ $(NAME) : $(OFILES)
 	$(CC) $(CFLAGS) $(OFILES) -o $(NAME)
 
 fclean : clean
-	rm $(NAME)
+	rm -f $(NAME)
 
 clean :
-	rm $(OFILES)
+	rm -f $(OFILES)
 
 re : fclean all
 
