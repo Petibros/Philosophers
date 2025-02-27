@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 22:17:07 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/26 03:02:01 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/28 00:46:04 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ static void	eat_routine(t_args *args)
 	sem_wait(args->last_ate_sem);
 	gettimeofday(&args->last_ate, NULL);
 	sem_post(args->last_ate_sem);
+	usleep(args->time_to_eat * 1000);
 	sem_wait(args->times_eaten_sem);
 	++args->times_eaten;
 	sem_post(args->times_eaten_sem);
-	usleep(args->time_to_eat * 1000);
 }
 
 static void	sleep_routine(t_args *args)
@@ -85,5 +85,6 @@ int	routine(t_args *args)
 			think_routine(args);
 		usleep(800);
 	}
+	destroy_n_join(args, true);
 	return (0);
 }

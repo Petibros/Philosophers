@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 20:31:26 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/21 01:25:53 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/27 22:54:17 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 long	calc_time(struct timeval start, struct timeval *time,
 		sem_t *time_sem)
 {
-	sem_wait(time_sem);
+	if (time_sem)
+		sem_wait(time_sem);
 	gettimeofday(time, NULL);
-	sem_post(time_sem);
+	if (time_sem)
+		sem_post(time_sem);
 	return ((time->tv_sec - start.tv_sec) * 1000
 		+ (time->tv_usec - start.tv_usec) / 1000);
 }

@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:51:06 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/25 07:13:57 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/28 00:41:38 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ static void	eat_routine(t_philo *philo)
 	pthread_mutex_lock(&philo->last_ate_mutex);
 	gettimeofday(&philo->last_ate, NULL);
 	pthread_mutex_unlock(&philo->last_ate_mutex);
+	usleep(philo->time_to_eat * 1000);
 	pthread_mutex_lock(&philo->times_eaten_mutex);
 	++philo->times_eaten;
 	pthread_mutex_unlock(&philo->times_eaten_mutex);
-	usleep(philo->time_to_eat * 1000);
 }
 
 static void	sleep_routine(t_philo *philo)

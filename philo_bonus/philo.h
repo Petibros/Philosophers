@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 18:51:09 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/26 07:56:01 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/27 22:37:23 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ typedef struct s_args
 	pthread_t		lock_to_stop;
 	pthread_t		check_eaten_enough;
 	sem_t			*stop_sim;
-	sem_t			*stop_main;
 	sem_t			*eaten_enough;
 	sem_t			*time_sem;
 	sem_t			*last_ate_sem;

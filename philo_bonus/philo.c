@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 20:38:08 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/26 08:13:46 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/27 23:01:03 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,36 +23,36 @@ static void	destroy_table(t_args *args, bool join)
 	sem_close(args->write);
 	sem_close(args->stop_sim);
 	sem_close(args->eaten_enough);
-	sem_close(args->stop_main);
+	sem_close(args->stop_sem);
 }
 
-static int	init_table(t_args *args)
+static int	init_table(t_args *args, int status)
 {
 	args->stop = false;
 	args->forks = sem_open("forks", O_CREAT, 0777, args->n_philo);
 	args->write = sem_open("write", O_CREAT, 0777, 1);
 	args->stop_sim = sem_open("stop_sim", O_CREAT, 0777, 0);
 	args->eaten_enough = sem_open("eaten_enough", O_CREAT, 0777, 0);
-	args->stop_main = sem_open("stop_main", O_CREAT, 0777, 1);
+	args->stop_sem = sem_open("stop_sem", O_CREAT, 0777, 1);
 	sem_unlink("eaten_enough");
 	sem_unlink("forks");
 	sem_unlink("write");
 	sem_unlink("stop_sim");
-	sem_unlink("stop_main");
+	sem_unlink("stop_sem");
 	args->times_eaten = 0;
 	if (pthread_create(&args->lock_main, NULL, &lock_main, args))
-	{
-		destroy_table(args, false);
-		return (-1);
-	}
+		status = -1;
 	if (pthread_create(&args->check_eaten_enough,
 			NULL, &check_eaten_enough, args))
+		status = -2;
+	if (status < 0)
 	{
+		write(2, "failed to create a thread in philo.c", 36);
 		destroy_table(args, false);
-		pthread_detach(args->lock_main);
-		return (-1);
 	}
-	return (0);
+	if (status == -2)
+		pthread_detach(args->lock_main);
+	return (status);
 }
 
 static int	create_philos(t_args *args, int pid, unsigned int n)
@@ -64,14 +64,16 @@ static int	create_philos(t_args *args, int pid, unsigned int n)
 	{
 		pid = fork();
 		if (pid == -1)
+		{
+			write(2, "failed to fork in philo.c", 23);
 			return (-1);
+		}
 		if (pid == 0)
 		{
 			args->philo_id = n + 1;
 			if (init_sems_n_verif(args) == -1)
 				return (-2);
 			routine(args);
-			destroy_n_join(args, true);
 			return (1);
 		}
 		usleep(5000);
@@ -84,7 +86,7 @@ int	philosophers(t_args *args)
 {
 	long	status;
 
-	if (init_table(args) == -1)
+	if (init_table(args, 0) < 0)
 		return (-1);
 	status = create_philos(args, 0, 0);
 	if (status < 0)
