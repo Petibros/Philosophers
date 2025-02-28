@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 22:17:07 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/28 00:46:04 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/28 16:10:14 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	routine(t_args *args)
 			break ;
 		}
 		if (fork_routine(args) == -1)
-			return (0);
+			break ;
 		if (is_running(args->stop_sem, &args->stop) == true)
 			eat_routine(args);
 		sem_post(args->forks);

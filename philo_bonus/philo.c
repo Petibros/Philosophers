@@ -6,7 +6,7 @@
 /*   By: sacgarci <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 20:38:08 by sacgarci          #+#    #+#             */
-/*   Updated: 2025/02/27 23:01:03 by sacgarci         ###   ########.fr       */
+/*   Updated: 2025/02/28 16:20:59 by sacgarci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,8 @@ static void	destroy_table(t_args *args, bool join)
 	sem_close(args->stop_sem);
 }
 
-static int	init_table(t_args *args, int status)
+static void	init_semaphores(t_args *args)
 {
-	args->stop = false;
 	args->forks = sem_open("forks", O_CREAT, 0777, args->n_philo);
 	args->write = sem_open("write", O_CREAT, 0777, 1);
 	args->stop_sim = sem_open("stop_sim", O_CREAT, 0777, 0);
@@ -39,7 +38,16 @@ static int	init_table(t_args *args, int status)
 	sem_unlink("write");
 	sem_unlink("stop_sim");
 	sem_unlink("stop_sem");
+}
+
+static int	init_table(t_args *args, int status)
+{
+	init_semaphores(args);
+	args->stop = false;
 	args->times_eaten = 0;
+	gettimeofday(&args->time, NULL);
+	gettimeofday(&args->last_ate, NULL);
+	gettimeofday(&args->time_start, NULL);
 	if (pthread_create(&args->lock_main, NULL, &lock_main, args))
 		status = -1;
 	if (pthread_create(&args->check_eaten_enough,
@@ -57,9 +65,6 @@ static int	init_table(t_args *args, int status)
 
 static int	create_philos(t_args *args, int pid, unsigned int n)
 {
-	gettimeofday(&args->time, NULL);
-	gettimeofday(&args->last_ate, NULL);
-	gettimeofday(&args->time_start, NULL);
 	while (n < args->n_philo)
 	{
 		pid = fork();
